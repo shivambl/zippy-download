@@ -33,8 +33,12 @@ parser.add_argument(
 args = parser.parse_args()
 
 # Read entire INPUT_FILE
-with open(args.input_file, "r") as input_file:
-    all_lines = input_file.readlines()
+try:
+    with open(args.input_file, "r") as input_file:
+        all_lines = input_file.readlines()
+except IOError as e:
+    print(e)
+    exit()
 
 # Get download link for each line from INPUT_FILE
 download_links = []
