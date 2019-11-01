@@ -1,6 +1,11 @@
 import argparse
-import urllib.request
 import re
+try:
+    import urllib.request
+    is_python_3 = True
+except ImportError:
+    import urllib2
+    is_python_3 = False
 
 regex_get_mod = r'\((\d+) % (\d+) \+ (\d+) % (\d+)\)'
 regex_get_filename = r'\((\d+) % (\d+) \+ (\d+) % (\d+)\) \+ \"\/(\S+)\"'
@@ -38,17 +43,23 @@ for line in all_lines:
     line = line.strip()
 
     # Check line is URL giving valid response
-    try:
-        resp = urllib.request.urlopen(line)
-    except ValueError:
-        continue
-    resp = resp.read().decode("utf8")
+    if is_python_3:
+        try:
+            resp = urllib.request.urlopen(line)
+        except ValueError:
+            continue
+    else:
+        try:
+            resp = urllib2.urlopen(line)
+        except ValueError:
+            continue
+    content = resp.read().decode("utf8")
 
     # Check URL syntax and response contents
     result_v = re.search(regex_v_in_url, line)
     result_filehtml = re.search(regex_filehtml_in_url, line)
-    result_mod = re.search(regex_get_mod, resp)
-    result_filename = re.search(regex_get_filename, resp)
+    result_mod = re.search(regex_get_mod, content)
+    result_filename = re.search(regex_get_filename, content)
 
     if result_v is None or result_filehtml is None or result_mod is None or result_filename is None:
         continue
