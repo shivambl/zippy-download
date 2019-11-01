@@ -78,3 +78,6 @@ if download_links:
     with open(args.output_file, "w") as output_file:
         for link in download_links:
             output_file.write(link + '\n')
+    print("{} links written to file {}".format(len(download_links), args.output_file))
+else:
+    print("0 links generated.")
