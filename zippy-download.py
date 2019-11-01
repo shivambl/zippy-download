@@ -1,5 +1,13 @@
 import argparse
+import urllib.request
+import re
 
+regex_get_mod = r'\((\d+) % (\d+) \+ (\d+) % (\d+)\)'
+regex_get_filename = r'\((\d+) % (\d+) \+ (\d+) % (\d+)\) \+ \"\/(\S+)\"'
+regex_v_in_url = r'/v/'
+regex_filehtml_in_url = r'/file.html[\n]*'
+
+# Create argument parser
 parser = argparse.ArgumentParser(
     description="Get file download links from zippyshare webpage links",
     epilog="Script repository: https://github.com/ratherlongname/zippy-download"
@@ -19,30 +27,24 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-# read all lines from INPUT_FILE
+# Read entire INPUT_FILE
 with open(args.input_file, "r") as input_file:
     all_lines = input_file.readlines()
 
-# filter valid urls and get their html pages
-import urllib.request
-import re
-
-regex_get_mod = r'\((\d+) % (\d+) \+ (\d+) % (\d+)\)'
-regex_get_filename = r'\((\d+) % (\d+) \+ (\d+) % (\d+)\) \+ \"\/(\S+)\"'
-regex_v_in_url = r'/v/'
-regex_filehtml_in_url = r'/file.html[\n]*'
-
+# Get download link for each line from INPUT_FILE
 download_links = []
 for line in all_lines:
+    # Trim whitespace
     line = line.strip()
-    # check we get response from url in line
+
+    # Check line is URL giving valid response
     try:
         resp = urllib.request.urlopen(line)
     except ValueError:
         continue
-
     resp = resp.read().decode("utf8")
 
+    # Check URL syntax and response contents
     result_v = re.search(regex_v_in_url, line)
     result_filehtml = re.search(regex_filehtml_in_url, line)
     result_mod = re.search(regex_get_mod, resp)
@@ -51,6 +53,7 @@ for line in all_lines:
     if result_v is None or result_filehtml is None or result_mod is None or result_filename is None:
         continue
     else:
+        # Generate download link
         url = line
         url = re.sub(regex_v_in_url, "/d/", url)
         url = re.sub(regex_filehtml_in_url, "/", url)
@@ -59,7 +62,7 @@ for line in all_lines:
         url = url + result_filename.group(5)
         download_links.append(url)
 
-# write all download links to OUTPUT_FILE
+# Write all download links to OUTPUT_FILE
 if download_links:
     with open(args.output_file, "w") as output_file:
         for link in download_links:
