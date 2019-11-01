@@ -61,6 +61,7 @@ for line in all_lines:
         download_links.append(url)
 
 # write all download links to OUTPUT_FILE
-with open(args.output_file, "w") as output_file:
-    for link in download_links:
-        output_file.write(link + '\n')
+if download_links is not None:
+    with open(args.output_file, "w") as output_file:
+        for link in download_links:
+            output_file.write(link + '\n')
