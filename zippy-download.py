@@ -18,7 +18,6 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
-print(args.input_file, args.output_file)
 
 # read all lines from INPUT_FILE
 with open(args.input_file, "r") as input_file:
@@ -61,7 +60,7 @@ for line in all_lines:
         download_links.append(url)
 
 # write all download links to OUTPUT_FILE
-if download_links is not None:
+if download_links:
     with open(args.output_file, "w") as output_file:
         for link in download_links:
             output_file.write(link + '\n')
