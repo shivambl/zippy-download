@@ -33,3 +33,7 @@ All direct download links are generated in urls.txt. There are many ways to down
 	  $ sudo apt install parallel -y
 	  $ cat urls.txt | parallel --gnu "wget {}"
 	  ```
+
+## Issues
+
+Please open an issue [here](https://github.com/ratherlongname/zippy-download/issues) if the script is not working.
