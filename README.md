@@ -37,3 +37,8 @@ All direct download links are generated in urls.txt. There are many ways to down
 ## Issues
 
 Please open an issue [here](https://github.com/ratherlongname/zippy-download/issues) if the script is not working.
+
+## TODO
+- [ ] Progress bar
+- [ ] Print count of links extracted successfully/ unsuccessfully
+- [ ] Print why link failed (file expired/ incorrect zippy link/ zippy formula fail etc)
